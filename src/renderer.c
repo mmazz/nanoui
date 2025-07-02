@@ -33,6 +33,9 @@ const char* get_shader_content(const char* fileName)
 
     // Leer contenido
     size_t read_size = fread(content, 1, size, fp);
+    if (read_size != size) {
+        fprintf(stderr, "Warning: Shader file %s read %zu bytes, expected %ld\n", fileName, read_size, size);
+    }
     fclose(fp);
     content[read_size] = '\0'; // aseguramos null-terminación
 

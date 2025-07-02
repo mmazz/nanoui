@@ -1,12 +1,9 @@
 #version 330 core
-
-in vec2 uv;
-out vec4 frag_color;
+in vec2 fragUV;
+out vec4 fragColor;
 
 uniform sampler2D tex;
-uniform vec4 color;
 
 void main() {
-    float alpha = texture(tex, uv).r;
-    frag_color = vec4(color.rgb, color.a * alpha);
+    fragColor = vec4(fragUV, 0.0, 1.0);  // usa UV como color
 }
