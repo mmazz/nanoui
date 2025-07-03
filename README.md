@@ -1,11 +1,12 @@
-# OpenGL with C
+# Small framework of OpenGL with C to learn
 
 This proyect is for personal learning.
 The goal is to learn:
   - C
   - Memory managment for huge amount of individual elements
   - Rendering
-  - More
+  - UI
+  - more
 
 ## Requirements
 
@@ -21,7 +22,6 @@ yay -S cglm
 ## Resources
 
 https://www.glfw.org/docs/3.3/quick.html
-
 https://learnopengl.com/Advanced-OpenGL/Instancing
 https://www.youtube.com/watch?v=HhH_9DnMBgw&list=PLtrSb4XxIVbodGYZZVzC1PAZfwckrXp_X
 
@@ -39,10 +39,8 @@ https://dev.to/shreyaspranav/how-to-render-truetype-fonts-in-opengl-using-stbtru
 
 ## Font
 
-I'm using from https://www.checkmyworking.com/cm-web-fonts/
-
+I'm using from [fonts](https://www.checkmyworking.com/cm-web-fonts/)
 Help: [Resource](https://dev.to/shreyaspranav/how-to-render-truetype-fonts-in-opengl-using-stbtruetypeh-1p5k)
-
 
 ## Learnings
 
@@ -51,7 +49,6 @@ Help: [Resource](https://dev.to/shreyaspranav/how-to-render-truetype-fonts-in-op
 If I put in the gcc -Iinclude, basically its saying were to find the files I'm usuing.
 So when I do in any .c the inclusion of the headers, it dont need to use relative paths.
 Only do #include header.h.
-
 
 ### Render:
 
@@ -66,3 +63,9 @@ Luego genero los VBO y luego cada vez que quiero cambiar de objeto bindeo el VAO
 - VAO Vertex Array Object: La informacion de como leo cada elemento del VBO
 - EBO Element Buffer Objects: Guardo indices sobre que elementos del VBO quiero dibujar, permitiendo dibujar multiples triangulos con solo 4 puntos.
 Creo que se deja de usar glDrawArrays, para usar glDrawElements.
+
+
+## UI vs Simulation
+
+I want to have the UI and fonts in a 2D space, probabily in a relative space.
+And the simulation in a 3D space using world coordinates.

@@ -1,14 +1,12 @@
 #version 330 core
-layout(location = 0) in vec3 inPos;    // x,y,z en pixeles
-layout(location = 1) in vec2 inUV;
+layout (location = 0) in vec2 aPos;
+layout (location = 1) in vec2 aTexCoord;
 
-uniform mat4 projection;              // ortho(0, W, 0, H, -1, 1)
+uniform mat4 projection;
 
-out vec2 TexCoords;
+out vec2 TexCoord;
 
-void main(){
-    // transforma de pixeles a clip space
-    gl_Position = projection * vec4(inPos, 1.0);
-    TexCoords  = inUV;
-  //  TexCoords = vec2(inUV.x, 1.0 - inUV.y);
+void main() {
+    gl_Position = projection * vec4(aPos, 0.0, 1.0);
+    TexCoord = aTexCoord;
 }

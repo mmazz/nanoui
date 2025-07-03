@@ -14,10 +14,12 @@ typedef struct {
     GLuint shaderID;
     GLuint vao;
     GLuint vbo;
+    int baseSizePx;
     stbtt_bakedchar cdata[NUM_CHARS];
 } Font;
 
 
 void font_init(Font *font, const char *fontpath, GLuint shader);
-void font_render_text(Font *font, const char *text, float x, float y, float z, float sx, float sy);
+
+void font_render_text(Font *font, const char *text, float x, float y, float scale);
 #endif
