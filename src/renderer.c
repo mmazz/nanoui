@@ -6,7 +6,12 @@ GLuint init_shader_program(const char *vertexPath, const char *fragmentPath) {
     GLuint vertexShader, fragmentShader;
     compile_shader(&vertexShader, GL_VERTEX_SHADER, vertexPath);
     compile_shader(&fragmentShader, GL_FRAGMENT_SHADER, fragmentPath);
-    return link_shader(vertexShader, fragmentShader);
+    GLuint program = link_shader(vertexShader, fragmentShader);
+    if (program== 0) {
+        fprintf(stderr, "Error: Failed to initialize program shader\n");
+        return -1;
+    }
+    return program;
 }
 
 const char* get_shader_content(const char* fileName)

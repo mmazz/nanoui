@@ -29,6 +29,11 @@ bool init_glad() {
     printf("Renderer: %s\n", glGetString(GL_RENDERER));
     printf("Vendor:   %s\n", glGetString(GL_VENDOR));
     printf("Version:  %s\n", glGetString(GL_VERSION));
+    const GLubyte* version = glGetString(GL_VERSION);
+    if (version)
+        printf("OpenGL version: %s\n", version);
+    else
+        fprintf(stderr, "ERROR: glGetString(GL_VERSION) returned NULL\n");
     return true;
 }
 

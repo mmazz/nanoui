@@ -6,6 +6,7 @@
 #define STB_TRUETYPE_IMPLEMENTATION
 #include "stb_truetype.h"
 #define MAX_CHARS 256
+
 void font_init(Font *font, const char *fontpath, GLuint shader) {
     FILE *f = fopen(fontpath, "rb");
     if (!f) { perror(fontpath); exit(1); }
@@ -33,17 +34,14 @@ void font_init(Font *font, const char *fontpath, GLuint shader) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     int swz[4] = {GL_ONE, GL_ONE, GL_ONE, GL_RED};
-   // int swz[4] = {GL_RED, GL_RED, GL_RED, GL_RED}; // RED en todos los canales
     glTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_RGBA, swz);
     // Setup VAO/VBO
     glGenVertexArrays(1, &font->vao);
     glGenBuffers(1, &font->vbo);
     glBindVertexArray(font->vao);
     glBindBuffer(GL_ARRAY_BUFFER, font->vbo);
-    glBufferData(GL_ARRAY_BUFFER,
-             256 * 6 * 5 * sizeof(float),  // 6 vértices × 5 floats × MAX_CHARS
-             NULL,
-             GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, 256 * 6 * 5 * sizeof(float),  // 6 vértices × 5 floats × MAX_CHARS
+                 NULL, GL_DYNAMIC_DRAW);
     glEnableVertexAttribArray(0); // position
     glEnableVertexAttribArray(1); // uv
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);         // x,y,z
@@ -70,26 +68,26 @@ void font_render_text(Font *font, const char *text, float x, float y, float z, f
         stbtt_GetBakedQuad(font->cdata, ATLAS_W, ATLAS_H,
                            c - FIRST_CHAR,
                            &xpos, &ypos, &q,
-                           1 /* origen arriba‐izq. */);
+                           1);
 
         float x0 = q.x0 * sx, y0 = q.y0 * sy;
         float x1 = q.x1 * sx, y1 = q.y1 * sy;
         int idx = quads * 30;
 
         // Triángulo 1
-        verts[idx+0]=x0;  verts[idx+1]=y0;  verts[idx+2]=0;
-        verts[idx+3]=q.s0;verts[idx+4]=q.t0;
-        verts[idx+5]=x1;  verts[idx+6]=y0;  verts[idx+7]=0;
-        verts[idx+8]=q.s1;verts[idx+9]=q.t0;
-        verts[idx+10]=x1; verts[idx+11]=y1; verts[idx+12]=0;
-        verts[idx+13]=q.s1;verts[idx+14]=q.t1;
+        verts[idx+0]=x0;     verts[idx+1]=y0;     verts[idx+2]=1;
+        verts[idx+3]=q.s0;   verts[idx+4]=q.t0;
+        verts[idx+5]=x1;     verts[idx+6]=y0;     verts[idx+7]=1;
+        verts[idx+8]=q.s1;   verts[idx+9]=q.t0;
+        verts[idx+10]=x1;    verts[idx+11]=y1;    verts[idx+12]=1;
+        verts[idx+13]=q.s1;  verts[idx+14]=q.t1;
         // Triángulo 2
-        verts[idx+15]=x0; verts[idx+16]=y0; verts[idx+17]=0;
-        verts[idx+18]=q.s0;verts[idx+19]=q.t0;
-        verts[idx+20]=x1; verts[idx+21]=y1; verts[idx+22]=0;
-        verts[idx+23]=q.s1;verts[idx+24]=q.t1;
-        verts[idx+25]=x0; verts[idx+26]=y1; verts[idx+27]=0;
-        verts[idx+28]=q.s0;verts[idx+29]=q.t1;
+        verts[idx+15]=x0;    verts[idx+16]=y0;    verts[idx+17]=1;
+        verts[idx+18]=q.s0;  verts[idx+19]=q.t0;
+        verts[idx+20]=x1;    verts[idx+21]=y1;    verts[idx+22]=1;
+        verts[idx+23]=q.s1;  verts[idx+24]=q.t1;
+        verts[idx+25]=x0;    verts[idx+26]=y1;    verts[idx+27]=1;
+        verts[idx+28]=q.s0;  verts[idx+29]=q.t1;
 
         quads++;
     }
