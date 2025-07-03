@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -std=c99 -Wall -Wextra -O2 -Iinclude
+CFLAGS = -Wall -Wextra -O2 -Iinclude
 LIBS = -lglfw -ldl -lGL -lm
 
 # Archivos fuente organizados por módulo
@@ -7,10 +7,8 @@ SRC = \
 	src/main.c \
 	include/glad.c \
 	src/renderer.c \
-	src/ui.c \
 	src/font.c \
 	src/platform.c \
-	src/camera.c \
 
 # Reglas para convertir src/... en build/obj/...
 OBJ = $(patsubst src/%.c, build/obj/%.o, $(SRC))

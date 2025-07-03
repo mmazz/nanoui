@@ -1,4 +1,6 @@
 #include "renderer.h"
+#include <stdlib.h>
+#include <stdio.h>
 
 GLuint init_shader_program(const char *vertexPath, const char *fragmentPath) {
     GLuint vertexShader, fragmentShader;
@@ -49,15 +51,14 @@ void compile_shader(GLuint* shaderId, GLenum shaderType, const char* shaderFileP
 
     if (shaderSource == NULL) {
         fprintf(stderr, "Error: could not read shader file: %s\n", shaderFilePath);
-        *shaderId = 0;
-        return;
+        exit(1); // 💥 abortar: sin shader no tiene sentido seguir
     }
 
     *shaderId = glCreateShader(shaderType);
     if (*shaderId == 0) {
         fprintf(stderr, "Error: glCreateShader failed for %s\n", shaderFilePath);
         free((void*)shaderSource);
-        return;
+        exit(1);
     }
 
     glShaderSource(*shaderId, 1, &shaderSource, NULL);
@@ -69,11 +70,13 @@ void compile_shader(GLuint* shaderId, GLenum shaderType, const char* shaderFileP
         glGetShaderInfoLog(*shaderId, sizeof(infoLog), NULL, infoLog);
         fprintf(stderr, "Shader compilation failed (%s):\n%s\n", shaderFilePath, infoLog);
         glDeleteShader(*shaderId);
-        *shaderId = 0;
+        free((void*)shaderSource);
+        exit(1); // 💥 abortar directamente
     }
 
-    free((void*)shaderSource); // liberar memoria reservada por get_shader_content
+    free((void*)shaderSource);
 }
+
 
 GLuint link_shader(GLuint vertexShaderID, GLuint fragmentShaderID)
 {
@@ -98,6 +101,7 @@ GLuint link_shader(GLuint vertexShaderID, GLuint fragmentShaderID)
             glGetProgramInfoLog(programID, maxLength, NULL, infoLog);
             fprintf(stderr, "Shader Program Link Error:\n%s\n", infoLog);
             free(infoLog);
+            exit(1);
         }
 
         glDeleteProgram(programID);

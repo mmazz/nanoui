@@ -3,8 +3,7 @@
 
 #include <stddef.h>
 #include "glad/glad.h"
-#include <stdlib.h>
-#include <stdio.h>
+
 
 GLuint init_shader_program(const char *vertexPath, const char *fragmentPath);
 const char* get_shader_content(const char* fileName);
