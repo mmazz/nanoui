@@ -9,11 +9,6 @@
 #define CHAR_SIZE 32.0f
 
 void font_init(Font *font, const char *fontpath, GLuint shader) {
-    FILE *f = fopen(fontpath, "rb");
-    if (!f) { perror(fontpath); exit(1); }
-    fread(font->bitmap, 1, sizeof(font->bitmap), f);
-    fclose(f);
-
     unsigned char ttf_buffer[1 << 20];
     FILE *ttf_file = fopen(fontpath, "rb");
     if (!ttf_file) { perror(fontpath); exit(1); }
@@ -21,13 +16,20 @@ void font_init(Font *font, const char *fontpath, GLuint shader) {
     fclose(ttf_file);
     font->shaderID = shader;
     font->baseSizePx = CHAR_SIZE;
+
+    // Esto es lo que me genera el atlas.
+    // font->bitmap es el que tiene el atlas
+    // font->cdata tiene la info sobre donde esta cada caracter en el atlas
     stbtt_BakeFontBitmap(ttf_buffer, 0, CHAR_SIZE,
                          font->bitmap, ATLAS_W, ATLAS_H,
                          FIRST_CHAR, NUM_CHARS, font->cdata);
 
+    // Aca me voy a armar una textura
     glGenTextures(1, &font->textureID);
     glBindTexture(GL_TEXTURE_2D, font->textureID);
 
+    // Esto es importante! Como se que cada uno tiene 1byte tengo que ponerlo asi!
+    // Si no me lo alinea a 4 bytes creo.
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, ATLAS_W, ATLAS_H, 0,
                  GL_RED, GL_UNSIGNED_BYTE, font->bitmap);
@@ -42,7 +44,7 @@ void font_init(Font *font, const char *fontpath, GLuint shader) {
     glGenBuffers(1, &font->vbo);
     glBindVertexArray(font->vao);
     glBindBuffer(GL_ARRAY_BUFFER, font->vbo);
-    glBufferData(GL_ARRAY_BUFFER, 256 * 6 * 4 * sizeof(float),  // 6 vértices × 5 floats × MAX_CHARS
+    glBufferData(GL_ARRAY_BUFFER, MAX_CHARS * 6 * 4 * sizeof(float),  // 6 vértices × 4 floats × MAX_CHARS
                  NULL, GL_DYNAMIC_DRAW);
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0); // position: x, y
     glEnableVertexAttribArray(0);
